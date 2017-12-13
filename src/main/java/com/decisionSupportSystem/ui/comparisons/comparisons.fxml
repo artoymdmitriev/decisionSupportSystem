@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+      prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="main.java.com.decisionSupportSystem.ui.comparisons.ComparisonsController">
+   <children>
+       <VBox>
+           <Text>
+               Критерии:
+           </Text>
+           <ListView fx:id="criteriasList" prefHeight="200.0" prefWidth="200.0"/>
+           <VBox>
+               <HBox>
+                   <Button fx:id="addCriteria" text="Добавить критерий" />
+                   <Button fx:id="addSubcriteria" text="Добавить подкритерий" />
+               </HBox>
+               <HBox>
+                   <Button fx:id="delete" prefHeight="25.0" prefWidth="271.0" text="Удалить" />
+               </HBox>
+           </VBox>
+       </VBox>
+   </children>
+</HBox>

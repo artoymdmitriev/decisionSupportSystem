@@ -3,6 +3,10 @@ package main.java.com.decisionSupportSystem.logic;
 public class Criteria {
     private String name;
 
+    public Criteria(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }
@@ -13,8 +17,6 @@ public class Criteria {
 
     @Override
     public String toString() {
-        return "Criteria{" +
-                "name='" + name + '\'' +
-                '}';
+        return name;
     }
 }
