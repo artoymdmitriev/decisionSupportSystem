@@ -24,7 +24,7 @@ public class AnalyticHierarchyProcess {
             double sumSubcriteriasAvgGeometric = sumColumn(subcriteriasAvgGeometric);
             subcriteriasWeights.put(entry.getKey(), weightsVector(subcriteriasAvgGeometric, sumSubcriteriasAvgGeometric));
         }
-        
+
         return new HashMap<>();
     }
 
