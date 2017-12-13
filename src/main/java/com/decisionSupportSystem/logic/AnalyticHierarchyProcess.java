@@ -7,7 +7,6 @@ import java.util.Map;
 public class AnalyticHierarchyProcess {
     private ArrayList<Alternative> alternatives;
     private ArrayList<Criteria> criterias;
-    private ArrayList<Subcriteria> subcriterias;
     private double criteriasComparison[][];
     private HashMap<Criteria, double[][]> subcriteriasComparison;
 
@@ -42,14 +41,6 @@ public class AnalyticHierarchyProcess {
 
     public void setCriterias(ArrayList<Criteria> criterias) {
         this.criterias = criterias;
-    }
-
-    public ArrayList<Subcriteria> getSubcriterias() {
-        return subcriterias;
-    }
-
-    public void setSubcriterias(ArrayList<Subcriteria> subcriterias) {
-        this.subcriterias = subcriterias;
     }
 
     public double[][] getCriteriasComparison() {

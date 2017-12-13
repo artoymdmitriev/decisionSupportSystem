@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.control.TreeView?>
 <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
       prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="main.java.com.decisionSupportSystem.ui.comparisons.ComparisonsController">
@@ -14,7 +15,7 @@
            <Text>
                Критерии:
            </Text>
-           <ListView fx:id="criteriasList" prefHeight="200.0" prefWidth="200.0"/>
+           <TreeView fx:id="criteriasList" prefHeight="200.0" prefWidth="200.0"/>
            <VBox>
                <HBox>
                    <Button fx:id="addCriteria" text="Добавить критерий" />

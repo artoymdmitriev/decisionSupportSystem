@@ -6,18 +6,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import main.java.com.decisionSupportSystem.logic.Criteria;
-import main.java.com.decisionSupportSystem.logic.Subcriteria;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ComparisonsController implements Initializable {
-    @FXML private ListView criteriasList;
+    @FXML private TreeView criteriasList;
 
     @FXML private Button addCriteria;
     @FXML private Button addSubcriteria;
@@ -26,6 +26,8 @@ public class ComparisonsController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        TreeItem<Criteria> rootItem = new TreeItem<>(new Criteria("Критерии"));
+        criteriasList.setRoot(rootItem);
         addCriteria.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -45,7 +47,8 @@ public class ComparisonsController implements Initializable {
                 inputStage.showAndWait();
 
                 Criteria criteria = new Criteria(loader.<InputController>getController().getFieldValue());
-                criteriasList.getItems().add(criteria);
+                TreeItem<Criteria> criteriaTreeItem = new TreeItem<>(criteria);
+                rootItem.getChildren().add(criteriaTreeItem);
             }
         });
 
@@ -66,10 +69,6 @@ public class ComparisonsController implements Initializable {
                 inputStage.initOwner(addCriteria.getScene().getWindow());
                 inputStage.setScene(newScene);
                 inputStage.showAndWait();
-
-                Subcriteria subcriteria = new Subcriteria(loader.<InputController>getController().getFieldValue(),
-                        (Criteria) criteriasList.getSelectionModel().getSelectedItem());
-                System.out.println(subcriteria);
             }
         });
     }
