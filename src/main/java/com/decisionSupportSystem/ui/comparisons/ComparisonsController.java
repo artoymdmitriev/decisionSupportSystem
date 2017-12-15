@@ -11,6 +11,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import main.java.com.decisionSupportSystem.logic.Criteria;
+import main.java.com.decisionSupportSystem.logic.DataModel;
 
 import java.io.IOException;
 import java.net.URL;
@@ -23,6 +24,7 @@ public class ComparisonsController implements Initializable {
     @FXML private Button addSubcriteria;
     @FXML private Button delete;
 
+    private DataModel dataModel = new DataModel();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

@@ -13,7 +13,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         BorderPane root = new BorderPane();
-        //Parent root = FXMLLoader.load(getClass().getResource("comparisons/comparisons.fxml"));
         FXMLLoader loader = new FXMLLoader(getClass().getResource("comparisons/comparisons.fxml"));
         root.setCenter(loader.load());
         ComparisonsController comparisonsController = loader.getController();

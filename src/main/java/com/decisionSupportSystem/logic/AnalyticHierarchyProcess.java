@@ -9,6 +9,7 @@ public class AnalyticHierarchyProcess {
     private ArrayList<Criteria> criterias;
     private double criteriasComparison[][];
     private HashMap<Criteria, double[][]> subcriteriasComparison;
+    private HashMap<Criteria, double[][]> alternativesComparison;
 
     public HashMap<Alternative, Double> getVector() {
         // Criterias weights
@@ -25,6 +26,14 @@ public class AnalyticHierarchyProcess {
         }
 
         return new HashMap<>();
+    }
+
+    public HashMap<Criteria, double[][]> getAlternativesComparison() {
+        return alternativesComparison;
+    }
+
+    public void setAlternativesComparison(HashMap<Criteria, double[][]> alternativesComparison) {
+        this.alternativesComparison = alternativesComparison;
     }
 
     public ArrayList<Alternative> getAlternatives() {
