@@ -13,6 +13,14 @@ public class Criteria {
         this.parent = parent;
     }
 
+    public Criteria getParent() {
+        return parent;
+    }
+
+    public void setParent(Criteria parent) {
+        this.parent = parent;
+    }
+
     public String getName() {
         return name;
     }

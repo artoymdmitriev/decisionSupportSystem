@@ -12,9 +12,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import main.java.com.decisionSupportSystem.logic.Criteria;
 import main.java.com.decisionSupportSystem.logic.DataModel;
+import sun.reflect.generics.tree.Tree;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class ComparisonsController implements Initializable {
@@ -51,6 +53,8 @@ public class ComparisonsController implements Initializable {
                 Criteria criteria = new Criteria(loader.<InputController>getController().getFieldValue());
                 TreeItem<Criteria> criteriaTreeItem = new TreeItem<>(criteria);
                 rootItem.getChildren().add(criteriaTreeItem);
+
+                dataModel.getCriterias().add(criteria);
             }
         });
 
@@ -71,6 +75,29 @@ public class ComparisonsController implements Initializable {
                 inputStage.initOwner(addCriteria.getScene().getWindow());
                 inputStage.setScene(newScene);
                 inputStage.showAndWait();
+
+                // Create subcriteria
+                Criteria subcriteria = new Criteria(loader.<InputController>getController().getFieldValue());
+                TreeItem<Criteria> treeItemParentCriteria = (TreeItem<Criteria>) criteriasList.getFocusModel().getFocusedItem();
+                System.out.println(treeItemParentCriteria.toString());
+                Criteria parentCriteria = treeItemParentCriteria.getValue();
+                System.out.println(parentCriteria.toString());
+                subcriteria.setParent(parentCriteria);
+
+                // Add subcriteria to DataModel
+                if(dataModel.getSubCriterias().get(parentCriteria) == null) {
+                    ArrayList<Criteria> subcriteriasAL = new ArrayList<>();
+                    subcriteriasAL.add(subcriteria);
+                    dataModel.getSubCriterias().put(parentCriteria, subcriteriasAL);
+                } else {
+                    dataModel.getSubCriterias().get(parentCriteria).add(subcriteria);
+                }
+
+                // Add subcriteria to TreeView
+                TreeItem<Criteria> subcriteriaTreeView = new TreeItem<>();
+                subcriteriaTreeView.setValue(subcriteria);
+                treeItemParentCriteria.getChildren().add(subcriteriaTreeView);
+
             }
         });
     }
