@@ -94,13 +94,7 @@ public class ComparisonsController implements Initializable, Observer {
                 Criteria subcriteria = new Criteria(getInputText(), parentCriteria);
 
                 // Add subcriteria to DataModel
-                if (dataModel.getSubCriterias().get(parentCriteria) == null) {
-                    ArrayList<Criteria> subcriteriasAL = new ArrayList<>();
-                    subcriteriasAL.add(subcriteria);
-                    dataModel.addSubcriteria(parentCriteria, subcriteriasAL);
-                } else {
-                    dataModel.addSubcriteria(parentCriteria, subcriteria);
-                }
+                dataModel.addSubcriteria(parentCriteria, subcriteria);
             }
         });
 
@@ -149,7 +143,7 @@ public class ComparisonsController implements Initializable, Observer {
             Criteria parentCriteria = entry.getKey();
             for (Object item : criteriasList.getRoot().getChildren()) {
                 Criteria c = ((TreeItem<Criteria>) item).getValue();
-                if (parentCriteria.getName().equals(c.getName())) {
+                if (parentCriteria.equals(c)) {
                     for (int i = 0; i < entry.getValue().size(); i++) {
                         ((TreeItem<Criteria>) item).getChildren().add(new TreeItem<>(entry.getValue().get(i)));
                     }

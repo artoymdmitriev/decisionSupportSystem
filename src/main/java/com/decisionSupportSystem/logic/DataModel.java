@@ -68,7 +68,13 @@ public class DataModel extends Observable {
     }
 
     public void addSubcriteria(Criteria parentCriteria, Criteria subCriteria) {
-        subCriterias.get(parentCriteria).add(subCriteria);
+        if(subCriterias.get(parentCriteria) == null) {
+            ArrayList<Criteria> subcriteriasAL = new ArrayList<>();
+            subcriteriasAL.add(subCriteria);
+            addSubcriteria(parentCriteria, subcriteriasAL);
+        } else {
+            subCriterias.get(parentCriteria).add(subCriteria);
+        }
         setChanged();
         notifyObservers();
     }
