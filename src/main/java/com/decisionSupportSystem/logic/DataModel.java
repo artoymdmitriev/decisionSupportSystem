@@ -7,6 +7,7 @@ import java.util.Observable;
 public class DataModel extends Observable {
     // Alternatives list
     private ArrayList<Alternative> alternatives = new ArrayList<>();
+    private HashMap<Criteria, double[][]> alternativesRates = new HashMap<>();
 
     // Criterias and their rates
     private ArrayList<Criteria> criterias = new ArrayList<>();
@@ -16,15 +17,40 @@ public class DataModel extends Observable {
     private HashMap<Criteria, ArrayList<Criteria>> subCriterias = new HashMap<>();
     private HashMap<Criteria, double[][]> subCriteriasRates = new HashMap<>();
 
-    // Alternatives comparison in each subcriteria
-    private HashMap<Criteria, double[][]> alternativesRates = new HashMap<>();
-
     public ArrayList<Criteria> getCriterias() {
         return criterias;
     }
 
     public HashMap<Criteria, ArrayList<Criteria>> getSubCriterias() {
         return subCriterias;
+    }
+
+    public HashMap<Criteria, double[][]> getAlternativesRates() {
+        return alternativesRates;
+    }
+
+    public void setAlternativesRates(HashMap<Criteria, double[][]> alternativesRates) {
+        this.alternativesRates = alternativesRates;
+    }
+
+    public double[][] getCriteriasRates() {
+        return criteriasRates;
+    }
+
+    public void setCriteriasRates(double[][] criteriasRates) {
+        this.criteriasRates = criteriasRates;
+    }
+
+    public void setSubCriterias(HashMap<Criteria, ArrayList<Criteria>> subCriterias) {
+        this.subCriterias = subCriterias;
+    }
+
+    public HashMap<Criteria, double[][]> getSubCriteriasRates() {
+        return subCriteriasRates;
+    }
+
+    public void setSubCriteriasRates(HashMap<Criteria, double[][]> subCriteriasRates) {
+        this.subCriteriasRates = subCriteriasRates;
     }
 
     public void addSubcriteria(Criteria parentCriteria, ArrayList<Criteria> subcriterias) {
