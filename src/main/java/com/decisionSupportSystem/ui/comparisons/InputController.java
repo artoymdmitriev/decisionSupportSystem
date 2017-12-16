@@ -25,6 +25,6 @@ public class InputController implements Initializable{
     }
 
     public String getFieldValue() {
-        return valueField.getText().toString();
+        return valueField.getText();
     }
 }

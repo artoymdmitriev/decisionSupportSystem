@@ -17,6 +17,14 @@ public class DataModel extends Observable {
     private HashMap<Criteria, ArrayList<Criteria>> subCriterias = new HashMap<>();
     private HashMap<Criteria, double[][]> subCriteriasRates = new HashMap<>();
 
+    public ArrayList<Alternative> getAlternatives() {
+        return alternatives;
+    }
+
+    public void setAlternatives(ArrayList<Alternative> alternatives) {
+        this.alternatives = alternatives;
+    }
+
     public ArrayList<Criteria> getCriterias() {
         return criterias;
     }

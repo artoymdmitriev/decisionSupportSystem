@@ -3,6 +3,10 @@ package main.java.com.decisionSupportSystem.logic;
 public class Alternative {
     private String name;
 
+    public Alternative(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }
@@ -13,8 +17,6 @@ public class Alternative {
 
     @Override
     public String toString() {
-        return "Alternative{" +
-                "name='" + name + '\'' +
-                '}';
+        return name;
     }
 }

@@ -18,7 +18,7 @@ public class Main extends Application {
         ComparisonsController comparisonsController = loader.getController();
 
         primaryStage.setTitle("DSS");
-        primaryStage.setScene(new Scene(root, 900, 275));
+        primaryStage.setScene(new Scene(root, 800, 400));
         primaryStage.show();
     }
 

@@ -20,8 +20,9 @@
                </HBox>
                <HBox>
                <Button fx:id="addAlternatives" text="Количество альтернатив" />
-               <Button fx:id="delete" text="Удалить" />
+               <Button fx:id="delete" prefHeight="25.0" prefWidth="107.0" text="Удалить" />
                </HBox>
+            <Button fx:id="getVector" prefHeight="25.0" prefWidth="261.0" text="Получить вектор результатов" />
            </VBox>
        </VBox>
       <VBox fx:id="rightPane" prefHeight="400.0" prefWidth="353.0" />
