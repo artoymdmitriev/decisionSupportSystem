@@ -13,11 +13,43 @@ public class AnalyticHierarchyProcess {
 
     public HashMap<Alternative, Double> getVector() {
         printData();
+
+        // rates of criterias F33:F35
+        HashMap<Criteria, Double> criteriasRates = new HashMap<>();
+        ArrayList<Criteria> cl = dataModel.getCriterias();
+        double[] cr = getWeights(dataModel.getCriteriasRates());
+        for(int i = 0; i < cl.size(); i++) {
+            criteriasRates.put(cl.get(i), cr[i]);
+        }
+
+        // rates of subcriterias like E39:E40, Criteria is an actual critera
+        HashMap<Criteria, double[]> subcriteriasRates = new HashMap<>();
+        HashMap<Criteria, double[][]> sr = dataModel.getSubCriteriasRates();
+        for(Map.Entry<Criteria, double[][]> entry : sr.entrySet()) {
+            subcriteriasRates.put(entry.getKey(), getWeights(entry.getValue()));
+        }
+
+        // rates of alternatives like F44:F46, Criteria = subcritera
+        HashMap<Criteria, double[]> alternativesRates = new HashMap<>();
+        HashMap<Criteria, double[][]> ar = dataModel.getAlternativesRates();
+        for(Map.Entry<Criteria, double[][]> entry : ar.entrySet()) {
+            alternativesRates.put(entry.getKey(), getWeights(entry.getValue()));
+        }
+
+        // alternatives rates * subcriterias weights A71:F84
+        
+
         HashMap<Alternative, Double> result = new HashMap<>();
         result.put(new Alternative("Альтернатива1"), 0.33);
         result.put(new Alternative("Альтернатива2"), 0.33);
         result.put(new Alternative("Альтернатива3"), 0.33);
         return result;
+    }
+
+    private double[] getWeights(double[][] matrix) {
+        double[] avgGeom = avgGeometric(matrix);
+        double sumCol = sumColumn(avgGeom);
+        return weightsVector(avgGeom, sumCol);
     }
 
     /**
@@ -38,14 +70,14 @@ public class AnalyticHierarchyProcess {
      * Finds weights for each criteria/subcriteria
      * (avgGeometric[i]/sumColumn)
      * */
-    public double[] weightsVector(double[] avgGeometric, double sumAvgGeometrics) {
+    public double[] weightsVector(double[] column, double sumOfColumn) {
         return new double[0];
     }
 
     /**
      * Multiplies two matrices.
      */
-    private double[] multiplyMatrices(double[][] matrix1, double[][] matrix2) {
+    private double[] multiplyMatrices(double[][] matrix1, double[] matrix2) {
         return new double[0];
     }
 
