@@ -45,7 +45,7 @@ public class ComparisonsController implements Initializable, Observer {
         // set controller as an observer of datamodel
         dataModel.addObserver(this);
 
-        TreeItem<Criteria> rootItem = new TreeItem<>(new Criteria("Критерии"));
+        TreeItem<Criteria> rootItem = new TreeItem<>(new Criteria("Критерии", null));
         rootItem.setExpanded(true);
 
         //set listener for the list of criterias
@@ -72,21 +72,7 @@ public class ComparisonsController implements Initializable, Observer {
         addCriteria.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("input.fxml"));
-                Scene newScene;
-                try {
-                    newScene = new Scene(loader.load());
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                    return;
-                }
-
-                Stage inputStage = new Stage();
-                inputStage.initOwner(addCriteria.getScene().getWindow());
-                inputStage.setScene(newScene);
-                inputStage.showAndWait();
-
-                Criteria criteria = new Criteria(loader.<InputController>getController().getFieldValue(), rootItem.getValue());
+                Criteria criteria = new Criteria(getInputText(), rootItem.getValue());
                 dataModel.addCriteria(criteria);
             }
         });
@@ -94,25 +80,10 @@ public class ComparisonsController implements Initializable, Observer {
         addSubcriteria.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("input.fxml"));
-                Scene newScene;
-                try {
-                    newScene = new Scene(loader.load());
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                    return;
-                }
-
-                Stage inputStage = new Stage();
-                inputStage.initOwner(addCriteria.getScene().getWindow());
-                inputStage.setScene(newScene);
-                inputStage.showAndWait();
-
                 // Create subcriteria
-                Criteria subcriteria = new Criteria(loader.<InputController>getController().getFieldValue());
                 TreeItem<Criteria> treeItemParentCriteria = (TreeItem<Criteria>) criteriasList.getFocusModel().getFocusedItem();
                 Criteria parentCriteria = treeItemParentCriteria.getValue();
-                subcriteria.setParent(parentCriteria);
+                Criteria subcriteria = new Criteria(getInputText(), parentCriteria);
 
                 // Add subcriteria to DataModel
                 if(dataModel.getSubCriterias().get(parentCriteria) == null) {
@@ -166,54 +137,21 @@ public class ComparisonsController implements Initializable, Observer {
         for(int i = 0; i < numberOfCriterias; i++) {
             for(int j = 0; j < numberOfCriterias; j++) {
                 textFields[i][j] = new TextField();
+
+                // set 1 for dioganal fields
+                if(i == j) {
+                    textFields[i][j].setText("1.0");
+                    textFields[i][j].setEditable(false);
+                }
             }
         }
 
-        // crate pane for textfields
-        GridPane gridPane = new GridPane();
+        addDioganalValuesChangeListener(textFields);
 
-        // create constraints for gridPane
-        for(int i = 0; i < numberOfCriterias; i++) {
-            ColumnConstraints colConst = new ColumnConstraints();
-            colConst.setPercentWidth(100.0 / numberOfCriterias);
-            gridPane.getColumnConstraints().add(colConst);
-        }
-
-        for(int i = 0; i < numberOfCriterias; i++) {
-            RowConstraints rowConst = new RowConstraints();
-            rowConst.setPercentHeight(100.0 / numberOfCriterias);
-            gridPane.getRowConstraints().add(rowConst);
-        }
-
-        for(int i = 0; i < numberOfCriterias; i++) {
-            for(int j = 0; j < numberOfCriterias; j++) {
-                gridPane.add(textFields[i][j], i, j);
-            }
-        }
+        GridPane gridPane = createAndFillGridPane(textFields, numberOfCriterias, numberOfCriterias);
         rightPane.getChildren().add(gridPane);
 
-        Button saveData = new Button();
-        saveData.setText("Сохранить");
-        saveData.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                // load values from user
-                double[][] rates = new double[numberOfCriterias][numberOfCriterias];
-                for(int i = 0; i < numberOfCriterias; i++) {
-                    for(int j = 0; j < numberOfCriterias; j++) {
-                        for(Node node : gridPane.getChildren()) {
-                            if(gridPane.getRowIndex(node) == i && gridPane.getColumnIndex(node) == j) {
-                                rates[i][j] = Integer.parseInt(((TextField) node).getText());
-                                System.out.println("rates[" + i + "][" + j + "]=" + rates[i][j]);
-                            }
-                        }
-                    }
-                }
-
-                dataModel.setCriteriasRates(rates);
-            }
-        });
-
+        Button saveData = createSaveButton(selectedItem, gridPane, numberOfCriterias, numberOfCriterias);
         rightPane.getChildren().add(saveData);
     }
 
@@ -225,61 +163,21 @@ public class ComparisonsController implements Initializable, Observer {
         for(int i = 0; i < numberOfSubcriterias; i++) {
             for(int j = 0; j < numberOfSubcriterias; j++) {
                 textFields[i][j] = new TextField();
+
+                // set 1 for dioganal fields
+                if(i == j) {
+                    textFields[i][j].setText("1.0");
+                    textFields[i][j].setEditable(false);
+                }
             }
         }
 
-        // create pane for textfields
-        GridPane gridPane = new GridPane();
+        addDioganalValuesChangeListener(textFields);
 
-        // create constraints for gridPane
-        for(int i = 0; i < numberOfSubcriterias; i++) {
-            ColumnConstraints colConst = new ColumnConstraints();
-            colConst.setPercentWidth(100.0 / numberOfSubcriterias);
-            gridPane.getColumnConstraints().add(colConst);
-        }
-
-        for(int i = 0; i < numberOfSubcriterias; i++) {
-            RowConstraints rowConst = new RowConstraints();
-            rowConst.setPercentHeight(100.0 / numberOfSubcriterias);
-            gridPane.getRowConstraints().add(rowConst);
-        }
-
-        for(int i = 0; i < numberOfSubcriterias; i++) {
-            for(int j = 0; j < numberOfSubcriterias; j++) {
-                gridPane.add(textFields[i][j], i, j);
-            }
-        }
+        GridPane gridPane = createAndFillGridPane(textFields, numberOfSubcriterias, numberOfSubcriterias);
         rightPane.getChildren().add(gridPane);
 
-        Button saveData = new Button();
-        saveData.setText("Сохранить");
-        saveData.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                Criteria cr = selectedItem.getValue();
-
-                // delete old alternatives rates if they exist
-                if(dataModel.getSubCriteriasRates() != null) {
-                    dataModel.getSubCriteriasRates().remove(cr);
-                }
-
-                // load values from user
-                double[][] rates = new double[numberOfSubcriterias][numberOfSubcriterias];
-                for(int i = 0; i < numberOfSubcriterias; i++) {
-                    for(int j = 0; j < numberOfSubcriterias; j++) {
-                        for(Node node : gridPane.getChildren()) {
-                            if(gridPane.getRowIndex(node) == i && gridPane.getColumnIndex(node) == j) {
-                                rates[i][j] = Integer.parseInt(((TextField) node).getText());
-                                System.out.println("rates[" + i + "][" + j + "]=" + rates[i][j]);
-                            }
-                        }
-                    }
-                }
-
-                dataModel.getSubCriteriasRates().put(cr, rates);
-            }
-        });
-
+        Button saveData = createSaveButton(selectedItem, gridPane, numberOfSubcriterias, numberOfSubcriterias);
         rightPane.getChildren().add(saveData);
     }
 
@@ -295,85 +193,15 @@ public class ComparisonsController implements Initializable, Observer {
                     textFields[i][j].setText("1.0");
                     textFields[i][j].setEditable(false);
                 }
-
-                // change dioganal value in table
-                textFields[i][j].focusedProperty().addListener(new ChangeListener<Boolean>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
-                        if(!newPropertyValue) {
-                            for(int ii = 0; ii < numberOfAlternatives; ii++) {
-                                for(int jj = 0; jj < numberOfAlternatives; jj++) {
-                                    if(textFields[ii][jj].focusedProperty().equals(arg0)) {
-                                        String valueStr = textFields[ii][jj].getText();
-                                        if(!valueStr.isEmpty()) {
-                                            double valueDouble = Double.parseDouble(valueStr);
-                                            double diagValue = Math.round((1.0 / valueDouble) * 100.0) / 100.0;
-                                            System.out.println("Formatted string: " + diagValue);
-
-                                            textFields[jj][ii].setText(String.valueOf(diagValue));
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-
             }
         }
 
-        // crate pane for textfields
-        GridPane gridPane = new GridPane();
+        addDioganalValuesChangeListener(textFields);
 
-        // create constraints for gridPane
-        for(int i = 0; i < numberOfAlternatives; i++) {
-            ColumnConstraints colConst = new ColumnConstraints();
-            colConst.setPercentWidth(100.0 / numberOfAlternatives);
-            gridPane.getColumnConstraints().add(colConst);
-        }
-
-        for(int i = 0; i < numberOfAlternatives; i++) {
-            RowConstraints rowConst = new RowConstraints();
-            rowConst.setPercentHeight(100.0 / numberOfAlternatives);
-            gridPane.getRowConstraints().add(rowConst);
-        }
-
-        for(int i = 0; i < numberOfAlternatives; i++) {
-            for(int j = 0; j < numberOfAlternatives; j++) {
-                gridPane.add(textFields[i][j], i, j);
-            }
-        }
+        GridPane gridPane = createAndFillGridPane(textFields, numberOfAlternatives, numberOfAlternatives);
         rightPane.getChildren().add(gridPane);
 
-        Button saveData = new Button();
-        saveData.setText("Сохранить");
-        saveData.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                Criteria cr = selectedItem.getValue();
-
-                // delete old alternatives rates if they exist
-                if(dataModel.getAlternativesRates().get(cr) != null) {
-                    dataModel.getAlternativesRates().remove(cr);
-                }
-
-                // load values from user
-                double[][] rates = new double[numberOfAlternatives][numberOfAlternatives];
-                for(int i = 0; i < numberOfAlternatives; i++) {
-                    for(int j = 0; j < numberOfAlternatives; j++) {
-                        for(Node node : gridPane.getChildren()) {
-                            if(gridPane.getRowIndex(node) == i && gridPane.getColumnIndex(node) == j) {
-                                rates[i][j] = Integer.parseInt(((TextField) node).getText());
-                                System.out.println("rates[" + i + "][" + j + "]=" + rates[i][j]);
-                            }
-                        }
-                    }
-                }
-
-                dataModel.getAlternativesRates().put(cr, rates);
-            }
-        });
-
+        Button saveData = createSaveButton(selectedItem, gridPane, numberOfAlternatives, numberOfAlternatives);
         rightPane.getChildren().add(saveData);
     }
 
@@ -394,5 +222,90 @@ public class ComparisonsController implements Initializable, Observer {
         String result = loader.<InputController>getController().getFieldValue();
 
         return result;
+    }
+
+    private void addDioganalValuesChangeListener(TextField[][] textFields) {
+        // change dioganal value in table
+        for(int i = 0; i < textFields.length; i++) {
+            for(int j = 0; j < textFields[i].length; j++) {
+                textFields[i][j].focusedProperty().addListener(new ChangeListener<Boolean>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
+                        if(!newPropertyValue) {
+                            for(int ii = 0; ii < textFields.length; ii++) {
+                                for(int jj = 0; jj < textFields[ii].length; jj++) {
+                                    if(textFields[ii][jj].focusedProperty().equals(arg0)) {
+                                        String valueStr = textFields[ii][jj].getText();
+                                        if(!valueStr.isEmpty()) {
+                                            double valueDouble = Double.parseDouble(valueStr);
+                                            double diagValue = Math.round((1.0 / valueDouble) * 100.0) / 100.0;
+                                            textFields[jj][ii].setText(String.valueOf(diagValue));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    public GridPane createAndFillGridPane(TextField[][] textFields, int rows, int columns) {
+        // create pane for textfields
+        GridPane gridPane = new GridPane();
+
+        // create constraints for gridPane
+        for(int i = 0; i < rows; i++) {
+            ColumnConstraints colConst = new ColumnConstraints();
+            colConst.setPercentWidth(100.0 / rows);
+            gridPane.getColumnConstraints().add(colConst);
+        }
+
+        for(int i = 0; i < columns; i++) {
+            RowConstraints rowConst = new RowConstraints();
+            rowConst.setPercentHeight(100.0 / columns);
+            gridPane.getRowConstraints().add(rowConst);
+        }
+
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                gridPane.add(textFields[i][j], i, j);
+            }
+        }
+
+        return gridPane;
+    }
+
+    private Button createSaveButton(TreeItem<Criteria> selectedItem, GridPane gridPane, int rows, int columns) {
+        Button saveData = new Button();
+        saveData.setText("Сохранить");
+        saveData.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Criteria cr = selectedItem.getValue();
+
+                // delete old alternatives rates if they exist
+                if(dataModel.getAlternativesRates().get(cr) != null) {
+                    dataModel.getAlternativesRates().remove(cr);
+                }
+
+                // load values from user
+                double[][] rates = new double[rows][columns];
+                for(int i = 0; i < rows; i++) {
+                    for(int j = 0; j < columns; j++) {
+                        for(Node node : gridPane.getChildren()) {
+                            if(gridPane.getRowIndex(node) == i && gridPane.getColumnIndex(node) == j) {
+                                rates[i][j] = Integer.parseInt(((TextField) node).getText());
+                            }
+                        }
+                    }
+                }
+
+                dataModel.getAlternativesRates().put(cr, rates);
+            }
+        });
+
+        return saveData;
     }
 }
