@@ -77,7 +77,7 @@ public class AnalyticHierarchyProcess {
     /**
      * Multiplies two matrices.
      */
-    private double[] multiplyMatrices(double[][] matrix1, double[] matrix2) {
+    public double[] multiplyMatrices(double[][] matrix1, double[] matrix2) {
         return new double[0];
     }
 
