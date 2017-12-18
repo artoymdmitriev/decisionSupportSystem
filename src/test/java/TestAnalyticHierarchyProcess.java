@@ -13,6 +13,7 @@ public class TestAnalyticHierarchyProcess {
         testAvgGeometric();
         testSumColumn();
         testWeightsVector();
+        testMultiplyMatrices();
     }
 
     private static void testAHP() {
@@ -186,5 +187,19 @@ public class TestAnalyticHierarchyProcess {
         }
 
         System.out.println("--- WEIGHTS VECTOR TEST END ---");
+    }
+
+    private static void testMultiplyMatrices () {
+        System.out.println("--- TEST MULTIPLY MATRICES START ---");
+        double matrix[][] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+        double array[] = {1, 2, 3};
+
+        AnalyticHierarchyProcess ahp = new AnalyticHierarchyProcess(null);
+        double result[] = ahp.multiplyMatrices(matrix, array);
+
+        for (int i = 0; i < result.length; i++) {
+            System.out.println(result[i]);
+        }
+        System.out.println("--- TEST MULTIPLY MATRICES END ---");
     }
 }

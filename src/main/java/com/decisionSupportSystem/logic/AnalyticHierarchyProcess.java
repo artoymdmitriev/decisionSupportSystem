@@ -100,8 +100,17 @@ public class AnalyticHierarchyProcess {
     /**
      * Multiplies two matrices.
      */
-    public double[] multiplyMatrices(double[][] matrix1, double[] matrix2) {
-        return new double[0];
+    public double[] multiplyMatrices(double[][] matrix, double[] array) {
+        double result[] = new double [array.length];
+        for (int i = 0; i < matrix.length; i++) {
+            double sum = 0;
+            for (int j = 0; j < matrix[i].length; j++) {
+                sum = sum + matrix[i][j] * array[j];
+            }
+            result[i] = sum;
+            sum = 0;
+        }
+        return result;
     }
 
     private void printData() {
