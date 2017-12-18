@@ -34,8 +34,6 @@ public class ComparisonsController implements Initializable, Observer {
     @FXML
     private Button addSubcriteria;
     @FXML
-    private Button delete;
-    @FXML
     private Button addAlternatives;
     @FXML
     private Button getVector;
@@ -80,8 +78,12 @@ public class ComparisonsController implements Initializable, Observer {
         addCriteria.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                Criteria criteria = new Criteria(getInputText(), rootItem.getValue());
-                dataModel.addCriteria(criteria);
+                String subcriteriaName = getInputText();
+                if(!subcriteriaName.equals("")) {
+                    Criteria criteria = new Criteria(subcriteriaName, rootItem.getValue());
+                    // Add subcriteria to DataModel
+                    dataModel.addCriteria(criteria);
+                }
             }
         });
 
@@ -91,19 +93,23 @@ public class ComparisonsController implements Initializable, Observer {
                 // Create subcriteria
                 TreeItem<Criteria> treeItemParentCriteria = (TreeItem<Criteria>) criteriasList.getFocusModel().getFocusedItem();
                 Criteria parentCriteria = treeItemParentCriteria.getValue();
-                Criteria subcriteria = new Criteria(getInputText(), parentCriteria);
 
-                // Add subcriteria to DataModel
-                dataModel.addSubcriteria(parentCriteria, subcriteria);
+                String subcriteriaName = getInputText();
+                if(!subcriteriaName.equals("")) {
+                    Criteria subcriteria = new Criteria(subcriteriaName, parentCriteria);
+                    // Add subcriteria to DataModel
+                    dataModel.addSubcriteria(parentCriteria, subcriteria);
+                }
             }
         });
 
         addAlternatives.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                ArrayList<Alternative> alternatives = inputAlternatives();
-                numberOfAlternatives = alternatives.size();
-                dataModel.setAlternatives(alternatives);
+//                ArrayList<Alternative> alternatives = inputAlternatives();
+//                numberOfAlternatives = alternatives.size();
+//                dataModel.setAlternatives(alternatives);
+                inputAlternatives();
             }
         });
 
@@ -373,7 +379,7 @@ public class ComparisonsController implements Initializable, Observer {
         return gridPane;
     }
 
-    private ArrayList<Alternative> inputAlternatives() {
+    private void inputAlternatives() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("alternatives.fxml"));
         Scene newScene = null;
         try {
@@ -382,12 +388,15 @@ public class ComparisonsController implements Initializable, Observer {
             ex.printStackTrace();
         }
 
+        AlternativesController ac = (AlternativesController) loader.getController();
+        ac.setDataModel(dataModel);
+
         Stage inputStage = new Stage();
         inputStage.initOwner(addCriteria.getScene().getWindow());
         inputStage.setScene(newScene);
         inputStage.showAndWait();
 
-        ArrayList<Alternative> alternativesList = loader.<AlternativesController>getController().getAlternatives();
-        return alternativesList;
+        //ArrayList<Alternative> alternativesList = loader.<AlternativesController>getController().getAlternatives();
+        //return alternativesList;
     }
 }
