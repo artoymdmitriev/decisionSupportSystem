@@ -10,6 +10,12 @@ import java.util.HashMap;
 
 public class TestAnalyticHierarchyProcess {
     public static void main(String[] args) {
+        testAvgGeometric();
+        testSumColumn();
+        testWeightsVector();
+    }
+
+    private static void testAHP() {
         DataModel dm = new DataModel();
 
         // create alternatives
@@ -119,5 +125,66 @@ public class TestAnalyticHierarchyProcess {
 
         AnalyticHierarchyProcess ahp = new AnalyticHierarchyProcess(dm);
         System.out.println("Вектор: " + ahp.getVector());
+    }
+
+    private static void testAvgGeometric() {
+        System.out.println("--- AVG GEOMETRIC TEST START ---");
+        double matrix[][] = new double[2][2];
+        matrix[0][0] = 1;
+        matrix[0][1] = 0.2;
+        matrix[1][0] = 5;
+        matrix[1][1] = 1;
+
+        System.out.println("Matrix: ");
+        for(int i = 0; i < 2; i++) {
+            for(int j = 0; j < 2; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+
+        AnalyticHierarchyProcess ahp = new AnalyticHierarchyProcess(null);
+        double[] avgGeometric = ahp.avgGeometric(matrix);
+
+        System.out.println("Avg Geometric: ");
+        for(int i = 0; i < avgGeometric.length; i++) {
+            System.out.println(avgGeometric[i]);
+        }
+        System.out.println("--- AVG GEOMETRIC TEST END ---");
+    }
+
+    private static void testSumColumn() {
+        System.out.println("--- SUM COLUMN TEST START ---");
+        double[] column = {1.0, 2.0, 3.0};
+
+        System.out.println("Column is: ");
+        for(int i = 0; i < column.length; i++) {
+            System.out.println(column[i]);
+        }
+
+        AnalyticHierarchyProcess ahp = new AnalyticHierarchyProcess(null);
+        System.out.println("Sum is: " + ahp.sumColumn(column));
+        System.out.println("--- SUM COLUMN TEST END ---");
+    }
+
+    private static void testWeightsVector() {
+        System.out.println("--- WEIGHTS VECTOR TEST START ---");
+        double[] elements = {1.0, 2.0, 3.0};
+        System.out.println("Columns is: ");
+        for(int i = 0; i < elements.length; i++) {
+            System.out.println(elements[i]);
+        }
+
+        double sumOfElements = 6.0;
+
+        AnalyticHierarchyProcess ahp = new AnalyticHierarchyProcess(null);
+        double[] resultVector = ahp.weightsVector(elements, sumOfElements);
+
+        System.out.println("Weights vector: ");
+        for(int i = 0; i < resultVector.length; i++) {
+            System.out.println(resultVector[i]);
+        }
+
+        System.out.println("--- WEIGHTS VECTOR TEST END ---");
     }
 }
