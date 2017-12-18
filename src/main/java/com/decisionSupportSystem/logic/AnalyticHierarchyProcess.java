@@ -56,14 +56,33 @@ public class AnalyticHierarchyProcess {
      * Finds geometric mean for every row of the matrix.
      * */
     public double[] avgGeometric(double[][] matrix) {
-        return new double[0];
+        double[] multline = new double[matrix.length];
+        double[] result = new double[matrix.length];
+        double mult = 1;
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                mult = mult * matrix[i][j];
+            }
+            multline[i] = mult;
+            mult = 1;
+
+        }
+        for (int i = 0; i < matrix.length; i++) {
+            double avgGeom = Math.pow(multline[i], 1.0/matrix.length);
+            result[i] = avgGeom;
+        }
+        return result;
     }
 
     /**
      * Finds the sum of all rows in column.
      * */
     public double sumColumn(double[] column) {
-        return 0;
+        double result = 0;
+        for (int i = 0; i < column.length; i++) {
+            result = result + column[i];
+        }
+        return result;
     }
 
     /**
@@ -71,7 +90,11 @@ public class AnalyticHierarchyProcess {
      * (avgGeometric[i]/sumColumn)
      * */
     public double[] weightsVector(double[] column, double sumOfColumn) {
-        return new double[0];
+        double finalResult[] = new double[column.length];
+        for (int i = 0; i < column.length; i++) {
+            finalResult[i] = column[i]/sumOfColumn;
+        }
+        return finalResult;
     }
 
     /**
