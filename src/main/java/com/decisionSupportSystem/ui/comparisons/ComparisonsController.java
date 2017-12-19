@@ -68,7 +68,7 @@ public class ComparisonsController implements Initializable, Observer {
                 } else if (!selectedItem.getChildren().isEmpty()) {
                     // rate subcriterias
                     setRatesForSubcriterias(selectedItem);
-                } else if (selectedItem.getChildren().isEmpty()) {
+                } else if (selectedItem.getChildren().isEmpty() && !selectedItem.getParent().equals(rootItem)) {
                     // rate alternatives
                     setRatesForAlternatives(selectedItem);
                 }
@@ -395,6 +395,7 @@ public class ComparisonsController implements Initializable, Observer {
         inputStage.initOwner(addCriteria.getScene().getWindow());
         inputStage.setScene(newScene);
         inputStage.showAndWait();
+        numberOfAlternatives = dataModel.getAlternatives().size();
 
         //ArrayList<Alternative> alternativesList = loader.<AlternativesController>getController().getAlternatives();
         //return alternativesList;

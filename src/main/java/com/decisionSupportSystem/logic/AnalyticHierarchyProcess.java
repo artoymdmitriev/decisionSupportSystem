@@ -173,9 +173,9 @@ public class AnalyticHierarchyProcess {
         }
 
         HashMap<Alternative, Double> result = new HashMap<>();
-        result.put(new Alternative("Альтернатива1"), 0.33);
-        result.put(new Alternative("Альтернатива2"), 0.33);
-        result.put(new Alternative("Альтернатива3"), 0.33);
+        for(int i = 0; i < dataModel.getAlternatives().size(); i++) {
+            result.put(dataModel.getAlternatives().get(i), finalVector[i]);
+        }
         return result;
     }
 
