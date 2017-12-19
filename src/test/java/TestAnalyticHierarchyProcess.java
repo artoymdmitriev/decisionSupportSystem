@@ -10,10 +10,11 @@ import java.util.HashMap;
 
 public class TestAnalyticHierarchyProcess {
     public static void main(String[] args) {
-        testAvgGeometric();
-        testSumColumn();
-        testWeightsVector();
-        testMultiplyMatrices();
+//        testAvgGeometric();
+//        testSumColumn();
+//        testWeightsVector();
+//        testMultiplyMatrices();
+        testAHP();
     }
 
     private static void testAHP() {
@@ -54,8 +55,8 @@ public class TestAnalyticHierarchyProcess {
         dm.addSubcriteria(c2, c2s1);
         dm.addSubcriteria(c2, c2s2);
 
-        Criteria c3s1 = new Criteria("Режимы работы");
-        Criteria c3s2 = new Criteria("Объем шкафа");
+        Criteria c3s1 = new Criteria("Режимы работы", c3);
+        Criteria c3s2 = new Criteria("Объем шкафа", c3);
         dm.addSubcriteria(c3, c3s1);
         dm.addSubcriteria(c3, c3s2);
 

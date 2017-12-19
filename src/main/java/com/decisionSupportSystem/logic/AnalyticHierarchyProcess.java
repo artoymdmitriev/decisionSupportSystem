@@ -22,11 +22,25 @@ public class AnalyticHierarchyProcess {
             criteriasRates.put(cl.get(i), cr[i]);
         }
 
+        System.out.println("--- Веса критериев: ");
+        for(Map.Entry<Criteria, Double> entry : criteriasRates.entrySet()) {
+            System.out.println(entry.getKey() + " " + entry.getValue());
+        }
+
         // rates of subcriterias like E39:E40, Criteria is an actual critera
         HashMap<Criteria, double[]> subcriteriasRates = new HashMap<>();
         HashMap<Criteria, double[][]> sr = dataModel.getSubCriteriasRates();
         for(Map.Entry<Criteria, double[][]> entry : sr.entrySet()) {
             subcriteriasRates.put(entry.getKey(), getWeights(entry.getValue()));
+        }
+
+        System.out.println("--- Веса подкритериев для каждого критерия: ");
+        for(Map.Entry<Criteria, double[]> entry : subcriteriasRates.entrySet()) {
+            System.out.println("Критерий: " + entry.getKey());
+            for(int i = 0; i < entry.getValue().length; i++) {
+                System.out.println(dataModel.getSubCriterias().get(entry.getKey()).get(i) + " " + entry.getValue()[i]);
+
+            }
         }
 
         // rates of alternatives like F44:F46, Criteria = subcritera
@@ -36,8 +50,127 @@ public class AnalyticHierarchyProcess {
             alternativesRates.put(entry.getKey(), getWeights(entry.getValue()));
         }
 
+        System.out.println("--- Веса альтернатив для каждого подкритерия: ");
+        for(Map.Entry<Criteria, double[]> entry : alternativesRates.entrySet()) {
+            System.out.println("Подкритерий: " + entry.getKey());
+            for(int i = 0; i < entry.getValue().length; i++) {
+                System.out.println(dataModel.getAlternatives().get(i) + " " + entry.getValue()[i]);
+            }
+        }
+
+        System.out.println("------------------------- ляляляляляляляля -----------------");
         // alternatives rates * subcriterias weights A71:F84
-        
+        HashMap<Criteria, double[]> subcriteriasAlternativesVector = new HashMap<>();
+        System.out.println("--- Свертываем альтернативы и подкритерии: ");
+        for(Criteria c : dataModel.getCriterias()) {
+            int columnsAmount = 0;
+            for(Map.Entry<Criteria, double[]> entry : alternativesRates.entrySet()) {
+                if(entry.getKey().getParent().equals(c)) {
+                    columnsAmount++;
+                }
+            }
+
+            int rowsAmount = 0;
+            for(Map.Entry<Criteria, double[]> entry : alternativesRates.entrySet()) {
+                if(entry.getKey().getParent().equals(c)) {
+                    rowsAmount = entry.getValue().length;
+                }
+            }
+            // A72:B74
+            System.out.println("Критерий: " + c + " Таблица на " + columnsAmount + " колонок и " + rowsAmount + " строк.");
+            double alternativesVector[][] = new double[rowsAmount][columnsAmount];
+
+            int x = 0;
+
+            ArrayList<Criteria> orderOfSubcriterias = dataModel.getSubCriterias().get(c);
+            for(Criteria crit : orderOfSubcriterias) {
+                for(Map.Entry<Criteria, double[]> entry : alternativesRates.entrySet()) {
+                    if(entry.getKey().equals(crit)) {
+                        for(int i = 0; i < rowsAmount; i++) {
+                            alternativesVector[i][x] = entry.getValue()[i];
+                        }
+                        x++;
+                    }
+                }
+            }
+
+            double matrixSubcriteria[] = subcriteriasRates.get(c);
+
+
+
+            System.out.println("Альтернативы: ");
+            for(int i = 0; i < alternativesVector.length; i++) {
+                for(int j = 0; j < alternativesVector[i].length; j++) {
+                    System.out.print(alternativesVector[i][j] + "      ");
+                }
+                System.out.println();
+            }
+
+            System.out.println("Подкритерии");
+            for(int i = 0; i < matrixSubcriteria.length; i++) {
+                System.out.println(matrixSubcriteria[i]);
+            }
+
+            double[] resultVector = multiplyMatrices(alternativesVector, matrixSubcriteria);
+
+            for(int i = 0; i < resultVector.length; i++) {
+                System.out.println(resultVector[i]);
+            }
+            subcriteriasAlternativesVector.put(c, resultVector);
+        }
+
+        for(Map.Entry<Criteria, double[]> entry : subcriteriasAlternativesVector.entrySet()) {
+            System.out.println(entry.getKey());
+            for(int i = 0; i < entry.getValue().length; i++) {
+                System.out.println(entry.getValue()[i] + " ");
+            }
+        }
+
+        int noc = subcriteriasAlternativesVector.size();
+        int nor = 0;
+        for(Map.Entry<Criteria, double[]> entry : subcriteriasAlternativesVector.entrySet()) {
+            nor = entry.getValue().length;
+        }
+
+        double subcriteriasMatrix[][] = new double[nor][noc];
+        int col = 0;
+        for(int i = dataModel.getCriterias().size() - 1; i >= 0; i--) {
+            for(Map.Entry<Criteria, double[]> entry : subcriteriasAlternativesVector.entrySet()) {
+                if(entry.getKey().equals(dataModel.getCriterias().get(i))) {
+                    for(int x = 0; x < entry.getValue().length; x++) {
+                        subcriteriasMatrix[x][col] = entry.getValue()[x];
+                    }
+                    col++;
+                }
+            }
+        }
+
+        double[] criteriasWeights = new double[dataModel.getCriterias().size()];
+        for(int i = 0; i < dataModel.getCriterias().size(); i++) {
+            for(Map.Entry<Criteria, Double> crit : criteriasRates.entrySet()) {
+                if(crit.getKey().equals(dataModel.getCriterias().get(i))) {
+                    criteriasWeights[i] = crit.getValue();
+                }
+            }
+        }
+
+        double finalVector[] = multiplyMatrices(subcriteriasMatrix, criteriasWeights);
+        for(int i = 0; i < finalVector.length; i++) {
+            System.out.println(dataModel.getAlternatives().get(i) + " " + finalVector[i]);
+        }
+
+        System.out.println("---- Final matrix ----");
+        for(int i = 0; i < subcriteriasMatrix.length; i++) {
+            for(int j = 0; j < subcriteriasMatrix[i].length; j++) {
+                System.out.print(subcriteriasMatrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+
+        System.out.println("---- Criterias weights vector ----");
+        for(int i = 0; i < criteriasWeights.length; i++) {
+            System.out.print(criteriasWeights[i] + " ");
+        }
 
         HashMap<Alternative, Double> result = new HashMap<>();
         result.put(new Alternative("Альтернатива1"), 0.33);
@@ -101,14 +234,13 @@ public class AnalyticHierarchyProcess {
      * Multiplies two matrices.
      */
     public double[] multiplyMatrices(double[][] matrix, double[] array) {
-        double result[] = new double [array.length];
+        double result[] = new double [matrix.length];
         for (int i = 0; i < matrix.length; i++) {
             double sum = 0;
             for (int j = 0; j < matrix[i].length; j++) {
                 sum = sum + matrix[i][j] * array[j];
             }
             result[i] = sum;
-            sum = 0;
         }
         return result;
     }
